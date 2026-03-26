@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABHIMANYU - AI Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="nav-bar">
+        <a href="{{ url_for('index') }}" class="nav-link secondary">
+            KRISHIBODH C.C.
+        </a>
+        <a href="{{ url_for('chatbot') }}" class="nav-link main">
+            ABHIMANYU <span class="nav-subtitle">AI CHATBOT</span>
+        </a>
+    </div>
+
+    <div class="page-wrapper" style="justify-content: center; gap: 0;">
+        <div class="container" style="width: 100%; max-width: 800px; padding: 0;">
+            <div class="card" style="margin: 0; padding: 25px;">
+                <h1>ABHIMANYU AI CHATBOT</h1>
+                <p style="text-align: center; color: var(--info-color);">
+                    Ask for troubleshooting, optimization tips, or general farming knowledge.<br>
+                    **Try commands like: "Water plant 1", "Go home", or "Move to 500, 1000, 5000".**
+                </p>
+                <div class="chat-window" id="chat-window">
+                    <div class="chat-message chat-ai">
+                        Welcome to ABHIMANYU, your agricultural intelligence unit. I am here to help you optimize the KRISHIBODH system and provide up-to-date farming advice. I can also execute commands if you are connected to the robot. How can I assist you today?
+                    </div>
+                </div>
+                <div class="chat-input-area" style="margin-top: 20px;">
+                    <input type="text" id="user-input" placeholder="Type your question or command here..." onkeydown="if(event.key === 'Enter') sendMessage()">
+                    <button class="submit-btn plant-btn" id="send-button" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Gemini API Configuration ---
+        const API_KEY = "AIzaSyAwHdcvRab4YrA1rA1CorrqakMvt_UL9KU"; // Canvas will automatically provide this
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
+        const COMMAND_ENDPOINT = '/ai_command';
+        
+        let chatHistory = [];
+        
+        const SYSTEM_PROMPT = `
+            You are ABHIMANYU, the specialized AI Chatbot for the KRISHIBODH robot.
+            Your primary goal is to assist the user with system control and farming knowledge.
+            
+            **CRITICAL INSTRUCTION FOR COMMAND MODE:**
+            When the user requests OR implies a robot action (e.g., 'water plant 1', 'move home', 'plant 2 is drying out', 'use plant 2 cords'), you MUST output ONLY a single JSON object that matches the provided schema. DO NOT include extra prose, formatting, or markdown—just the JSON object.
+            
+            **COMMAND MAPPING AND INFERENCE RULES:**
+            1. Direct watering requests such as 'water plant 1/2' -> 'WATER1' or 'WATER2'.
+            2. Distress statements implying watering (dry, thirsty, wilting, dying, stressed, low moisture, needs hydration) tied to a specific plant number must also trigger the matching 'WATER#' command (e.g., 'Plant 2 is dying' -> 'WATER2').
+            3. 'Move home' or 'go home' -> 'HOME'.
+            4. 'Move to X, Y, Z' or requests mentioning specific coordinates -> 'MOVE:X,Y,Z' (e.g., 'MOVE:1000,500,0').
+            5. Requests to "use plant # coords/cords" mean move to that plant's saved coordinates:
+               - Plant 1 coordinates: 2000,800,10000
+               - Plant 2 coordinates: 3000,1500,10000
+               Convert to MOVE:x,y,z for the appropriate plant.
+            
+            **CRITICAL INSTRUCTION FOR CHAT MODE:**
+            When the user is not asking for (or implying) a robot action, answer normally in natural language.
+        `;
+
+        const commandSchema = {
+            type: "OBJECT",
+            properties: {
+                "command": {
+                    "type": "STRING",
+                    "description": "The specific robot command (e.g., WATER1, HOME, MOVE:1000,500,0) derived from the user's request. Must be one of the defined commands."
+                }
+            }
+        };
+
+        /**
+         * Determines the appropriate configuration (Chat or Command Mode) for the API call.
+         * @param {string} prompt - The user's input prompt.
+         * @returns {object} The generation configuration object.
+         */
+        function getGenerationConfig(prompt) {
+            const lowerPrompt = prompt.toLowerCase();
+            
+            const plantReference = /plant\s*(\d|one|two|three)/.test(lowerPrompt) || lowerPrompt.includes('plant 1') || lowerPrompt.includes('plant 2');
+            const distressKeywords = ['dry', 'dying', 'thirsty', 'wilting', 'stressed', 'low moisture', 'moisture', 'needs water', 'need water', 'parched'];
+            const distressMatch = distressKeywords.some(keyword => lowerPrompt.includes(keyword));
+            
+            const coreCommandKeywords = ['water', 'move', 'home', 'go to', 'goto', 'coordinate', 'coordinates', 'coord', 'coords', 'cords', 'use plant', 'position', 'x-axis', 'y-axis', 'z-axis'];
+            const isCommand = coreCommandKeywords.some(keyword => lowerPrompt.includes(keyword)) || (plantReference && distressMatch);
+
+            if (isCommand) {
+                // --- COMMAND MODE ---
+                // Forces JSON output, but REQUIRES Google Search to be disabled
+                return {
+                    isCommandMode: true,
+                    payloadConfig: {
+                        // NO tools property here
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            responseSchema: commandSchema
+                        }
+                    }
+                };
+            } else {
+                // --- CHAT MODE ---
+                // Natural language response, uses Google Search for grounding, no structured output
+                return {
+                    isCommandMode: false,
+                    payloadConfig: {
+                        tools: [{ "google_search": {} }],
+                        generationConfig: {} // Empty config for natural text
+                    }
+                };
+            }
+        }
+
+
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        function addMessage(text, sender, sources = []) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message chat-${sender}`;
+            messageDiv.innerHTML = text;
+            
+            if (sources.length > 0) {
+                const sourcesDiv = document.createElement('div');
+                sourcesDiv.className = 'source-citation';
+                sourcesDiv.innerHTML = 'Sources: ';
+                sources.forEach((source, index) => {
+                    if (index > 0) sourcesDiv.innerHTML += ' | ';
+                    if (source.uri && source.title) {
+                        sourcesDiv.innerHTML += `<a href="${source.uri}" target="_blank" style="color: inherit; text-decoration: underline;">${source.title.substring(0, 30)}...</a>`;
+                    }
+                });
+                messageDiv.appendChild(sourcesDiv);
+            }
+
+            chatWindow.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function fetchWithRetry(fn, retries = 3, delay = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    return await fn();
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+                }
+            }
+        }
+
+        async function executeRobotCommand(command) {
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'loading-indicator';
+            loadingIndicator.textContent = `[🤖 Executing Command: ${command}]`;
+            chatWindow.appendChild(loadingIndicator);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            try {
+                const response = await fetchWithRetry(async () => {
+                    const res = await fetch(COMMAND_ENDPOINT, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ command: command })
+                    });
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+                    return res.json();
+                });
+
+                loadingIndicator.textContent = `[✅ Command Status: ${response.message}]`;
+                loadingIndicator.style.color = '#00ff8a';
+                loadingIndicator.classList.remove('loading-indicator');
+                loadingIndicator.classList.add('chat-message', 'chat-ai');
+                
+                // Add the successful execution as the AI's response to history
+                chatHistory.push({ role: "model", parts: [{ text: `[Command Executed: ${command}] Result: ${response.message}` }] });
+
+            } catch (error) {
+                loadingIndicator.textContent = `[❌ Command Failed: Communication Error]`;
+                loadingIndicator.style.color = '#ff5252';
+                loadingIndicator.classList.remove('loading-indicator');
+                loadingIndicator.classList.add('chat-message', 'chat-ai');
+                console.error("Command Execution Error:", error);
+            }
+        }
+
+        async function sendMessage() {
+            const prompt = userInput.value.trim();
+            if (!prompt) return;
+
+            // --- API KEY CHECK (GUARDRAIL) ---
+            if (!API_KEY) {
+                addMessage("COMMUNICATION ERROR: API Key is missing. Cannot contact the AI Core.", 'ai');
+                return;
+            }
+            // ---------------------------------
+
+            // 1. Add user message to UI and history
+            addMessage(prompt, 'user');
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            userInput.value = '';
+            
+            // 2. Show loading indicator and disable button
+            let loadingIndicator = document.getElementById('loading-indicator');
+            if (!loadingIndicator) {
+                loadingIndicator = document.createElement('div');
+                loadingIndicator.id = 'loading-indicator';
+                loadingIndicator.className = 'loading-indicator';
+                loadingIndicator.textContent = 'ABHIMANYU is processing...';
+                chatWindow.appendChild(loadingIndicator);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+            sendButton.disabled = true;
+
+            // 3. Determine mode and prepare payload
+            const config = getGenerationConfig(prompt);
+            
+            const payload = {
+                contents: chatHistory,
+                systemInstruction: {
+                    parts: [{ text: SYSTEM_PROMPT }]
+                },
+                ...config.payloadConfig // Merge tools and generationConfig based on mode
+            };
+
+
+            try {
+                const response = await fetchWithRetry(async () => {
+                    const res = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) {
+                        const errorBody = await res.json();
+                        throw new Error(`HTTP error! Status: ${res.status}. Message: ${errorBody.error.message || 'API Call Failed.'}`);
+                    }
+                    return res.json();
+                });
+                
+                // 4. Process response based on mode
+                document.getElementById('loading-indicator')?.remove();
+                
+                const candidate = response.candidates?.[0];
+                const contentText = candidate?.content?.parts?.[0]?.text;
+                
+                if (contentText) {
+                    if (config.isCommandMode) {
+                        // --- PROCESS COMMAND MODE RESPONSE (JSON) ---
+                        try {
+                            const parsedJson = JSON.parse(contentText);
+                            const command = parsedJson.command;
+                            
+                            if (command) {
+                                await executeRobotCommand(command);
+                                return; // Exit after command execution
+                            }
+                        } catch (e) {
+                            // If AI failed to output clean JSON in command mode, notify user and log error
+                            addMessage(`AI Error: Could not parse command. Did you ask for a robot action? Raw response: ${contentText}`, 'ai');
+                            console.error("JSON Parsing Error in Command Mode:", e, "Raw Content:", contentText);
+                        }
+                    } 
+                    
+                    // --- PROCESS CHAT MODE RESPONSE (Natural Language) ---
+                    let aiResponseText = contentText;
+                    let sources = [];
+                    
+                    const groundingMetadata = candidate.groundingMetadata;
+                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                        sources = groundingMetadata.groundingAttributions
+                            .map(attribution => ({
+                                uri: attribution.web?.uri,
+                                title: attribution.web?.title,
+                            }))
+                            .filter(source => source.uri && source.title);
+                    }
+                    
+                    addMessage(aiResponseText, 'ai', sources);
+                    chatHistory.push({ role: "model", parts: [{ text: aiResponseText }] });
+
+                } else {
+                    addMessage("Error: I did not receive a valid command or response from the AI Core.", 'ai');
+                    console.error("Unexpected response structure:", response);
+                }
+
+
+            } catch (error) {
+                console.error("API Call Error:", error);
+                document.getElementById('loading-indicator')?.remove();
+                
+                let errorMessage = `COMMUNICATION ERROR: Unable to contact the AI Core. Please check your network connection or API key.`;
+                if (error.message.includes("HTTP error")) {
+                    errorMessage = `AI API Failed: ${error.message}`;
+                }
+                addMessage(errorMessage, 'ai');
+            } finally {
+                sendButton.disabled = false;
+            }
+        }
+
+    </script>
+</body>
+</html>
