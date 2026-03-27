@@ -1,0 +1,162 @@
+[
+    {
+        "timestamp": "2026-01-31 04:32:18",
+        "moisture_value": 521,
+        "action_taken": "Move (0,0)"
+    },
+    {
+        "timestamp": "2026-01-31 04:32:56",
+        "moisture_value": 521,
+        "action_taken": "Move (0,0)"
+    },
+    {
+        "timestamp": "2026-01-31 04:37:21",
+        "moisture_value": 521,
+        "action_taken": "Move (0,0,-10000)"
+    },
+    {
+        "timestamp": "2026-01-31 04:40:26",
+        "moisture_value": 518,
+        "action_taken": "Plant 1 Move"
+    },
+    {
+        "timestamp": "2026-01-31 04:44:02",
+        "moisture_value": 518,
+        "action_taken": "Plant 2 Move"
+    },
+    {
+        "timestamp": "2026-01-31 04:50:30",
+        "moisture_value": 526,
+        "action_taken": "Plant 1 Move"
+    },
+    {
+        "timestamp": "2026-01-31 05:05:28",
+        "moisture_value": 532,
+        "action_taken": "Move (0,0,-10000)"
+    },
+    {
+        "timestamp": "2026-01-31 05:07:23",
+        "moisture_value": 519,
+        "action_taken": "Exp #1: move_plant_2"
+    },
+    {
+        "timestamp": "2026-01-31 05:09:08",
+        "moisture_value": 523,
+        "action_taken": "Exp #2: move_plant_2"
+    },
+    {
+        "timestamp": "2026-01-31 05:10:12",
+        "moisture_value": 519,
+        "action_taken": "Plant 1 Move"
+    },
+    {
+        "timestamp": "2026-01-31 05:17:20",
+        "moisture_value": 519,
+        "action_taken": "Exp #1: move_plant_2"
+    },
+    {
+        "timestamp": "2026-01-31 05:24:03",
+        "moisture_value": 528,
+        "action_taken": "Exp #1: move_plant_2"
+    },
+    {
+        "timestamp": "2026-01-31 05:25:49",
+        "moisture_value": 518,
+        "action_taken": "Exp #2: move_plant_2"
+    },
+    {
+        "timestamp": "2026-01-31 05:27:34",
+        "moisture_value": 522,
+        "action_taken": "Exp #3: move_plant_2"
+    },
+    {
+        "timestamp": "2026-01-31 06:40:48",
+        "moisture_value": 518,
+        "action_taken": "Plant 1 Move"
+    },
+    {
+        "timestamp": "2026-01-31 07:00:14",
+        "moisture_value": 1023,
+        "action_taken": "Move (0,0,-2000)"
+    },
+    {
+        "timestamp": "2026-01-31 07:01:04",
+        "moisture_value": 1023,
+        "action_taken": "Move (2000,1000,10000)"
+    },
+    {
+        "timestamp": "2026-01-31 07:02:46",
+        "moisture_value": 1022,
+        "action_taken": "Move (0,0,-3000)"
+    },
+    {
+        "timestamp": "2026-01-31 07:03:05",
+        "moisture_value": 1023,
+        "action_taken": "Move (0,0,-1000)"
+    },
+    {
+        "timestamp": "2026-01-31 08:28:53",
+        "moisture_value": 1023,
+        "action_taken": "Plant 1 Move"
+    },
+    {
+        "timestamp": "2026-01-31 08:59:32",
+        "moisture_value": 1023,
+        "action_taken": "Exp #1: water_smart"
+    },
+    {
+        "timestamp": "2026-01-31 09:13:59",
+        "moisture_value": 1022,
+        "action_taken": "Move (0,0,-2000)"
+    },
+    {
+        "timestamp": "2026-01-31 09:14:22",
+        "moisture_value": 1018,
+        "action_taken": "Move (0,0,-2000)"
+    },
+    {
+        "timestamp": "2026-01-31 10:48:44",
+        "moisture_value": 1023,
+        "action_taken": "Exp #1: home"
+    },
+    {
+        "timestamp": "2026-01-31 10:53:59",
+        "moisture_value": 1023,
+        "action_taken": "Exp #1: home"
+    },
+    {
+        "timestamp": "2026-01-31 11:14:20",
+        "moisture_value": 1023,
+        "action_taken": "Move (0,0,-2000)"
+    },
+    {
+        "timestamp": "2026-01-31 11:14:51",
+        "moisture_value": 1021,
+        "action_taken": "Move (0,0,-4000)"
+    },
+    {
+        "timestamp": "2026-01-31 11:15:27",
+        "moisture_value": 1023,
+        "action_taken": "Move (0,0,-2000)"
+    },
+    {
+        "timestamp": "2026-01-31 11:16:33",
+        "moisture_value": 1023,
+        "action_taken": "Move (0,0,-2000)"
+    },
+    {
+        "timestamp": "2026-01-31 11:18:02",
+        "moisture_value": 1022,
+        "action_taken": "Move (0,0,-2000)"
+    },
+    {
+        "timestamp": "2026-01-31 11:29:52",
+        "moisture_value": 271,
+        "action_taken": "Home"
+    },
+    {
+        "timestamp": "2026-01-31 11:52:31",
+        "moisture_value": 1022,
+        "action_taken": "Move (0,0,-10000)"
+    }
+]

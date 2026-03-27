@@ -5,10 +5,6 @@ __pycache__/
 *.pyd
 .DS_Store
 Thumbs.db
-captured_images/
-logs.txt
-moisture_readings.txt
-readings.json
 .env
 dist/
 build/
