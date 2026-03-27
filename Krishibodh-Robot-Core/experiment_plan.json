@@ -1,0 +1,32 @@
+{
+    "execution_logic": {
+        "sequence": [
+            {
+                "action": "move_plant_1",
+                "wait_after": 2
+            },
+            {
+                "action": "check_sensor",
+                "wait_after": 2
+            },
+            {
+                "action": "capture_top",
+                "wait_after": 2
+            },
+            {
+                "action": "home",
+                "wait_after": 0
+            }
+        ]
+    },
+    "frequency": "Every 30 seconds",
+    "id": 1,
+    "steps": [
+        "Move to Plant 1",
+        "Measure moisture",
+        "Phenotypic scan",
+        "Return home"
+    ],
+    "title": "Plant 1 Monitoring",
+    "active": false
+}

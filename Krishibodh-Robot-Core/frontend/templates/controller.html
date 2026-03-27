@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRISHIBODH Control Center</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="nav-bar">
+        <a href="{{ url_for('home') }}" class="nav-link secondary">
+            HOME
+        </a>
+        <a href="{{ url_for('controller') }}" class="nav-link main">
+            KRISHIBODH C.C.
+        </a>
+        <a href="{{ url_for('experiments_page') }}" class="nav-link secondary">
+            EXPERIMENTS
+        </a>
+        <a href="{{ url_for('chatbot') }}" class="nav-link secondary">
+            AI CHATBOT
+        </a>
+    </div>
+
+    <div class="page-wrapper">
+
+        <div class="container">
+            <h1>CONTROL INTERFACE</h1>
+            <div class="card">
+                <h2>CONNECTION MANAGER</h2>
+                <form action="/connect" method="post" class="connection-form">
+                    <div class="form-row">
+                        <select name="port" id="port-select">
+                            <option value="">-- Select a Port --</option>
+                            {% for port in available_ports %}<option value="{{ port }}" {% if port==connected_port
+                                %}selected{% endif %}>{{ port }}</option>{% endfor %}
+                        </select>
+                        <button type="submit" class="submit-btn connect-btn">Connect</button>
+                    </div>
+                    <div class="status-indicator">
+                        {% if is_connected %}<span class="status-connected">●</span> Connected to {{ connected_port }}{%
+                        else %}<span class="status-disconnected">●</span> Status: Disconnected{% endif %}
+                    </div>
+                </form>
+                {% if is_connected %}
+                <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                    <form action="/test_connection" method="post" style="flex: 1; min-width: 100px;">
+                        <button type="submit" class="submit-btn"
+                            style="background-color: rgba(88, 166, 255, 0.1); border-color: #58a6ff; color: #58a6ff; width: 100%; font-size: 0.85em;">Test</button>
+                    </form>
+                    <form action="/test_z_axis" method="post" style="flex: 1; min-width: 100px;">
+                        <button type="submit" class="submit-btn"
+                            style="background-color: rgba(76, 175, 80, 0.1); border-color: #4caf50; color: #4caf50; width: 100%; font-size: 0.85em;">Test
+                            Z-Axis</button>
+                    </form>
+                    <form action="/clear_buffer" method="post" style="flex: 1; min-width: 100px;">
+                        <button type="submit" class="submit-btn"
+                            style="background-color: rgba(255, 193, 7, 0.1); border-color: #ffc107; color: #ffc107; width: 100%; font-size: 0.85em;">Clear
+                            Buffer</button>
+                    </form>
+                    <form action="/read_sensor_now" method="post" style="flex: 1; min-width: 100px;">
+                        <button type="submit" class="submit-btn"
+                            style="background-color: rgba(0, 188, 212, 0.1); border-color: #00bcd4; color: #00bcd4; width: 100%; font-size: 0.85em;">Read
+                            Sensor</button>
+                    </form>
+                    <form action="/disconnect" method="post" style="flex: 1; min-width: 100px;">
+                        <button type="submit" class="submit-btn"
+                            style="background-color: rgba(255, 82, 82, 0.1); border-color: #ff5252; color: #ff5252; width: 100%; font-size: 0.85em;">Disconnect</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card">
+                <h2>SYSTEM STATUS: MAX SPEED</h2>
+                <div class="status-grid">
+                    <div class="status-item"><span>X-AXIS (800)</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    <div class="status-item"><span>Y-AXIS (400)</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    <div class="status-item"><span>Z-AXIS (1800)</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="controls-container">
+                    <form action="/move" method="post" class="input-group">
+                        <h2>MANUAL CONTROL</h2>
+                        <input type="number" name="x_coord" placeholder="X-COORDINATE"><input type="number"
+                            name="y_coord" placeholder="Y-COORDINATE"><input type="number" name="z_coord"
+                            placeholder="Z-COORDINATE">
+                        <div class="button-grid">
+                            <button type="submit" name="action" value="move" class="submit-btn">Engage</button>
+                            <button type="submit" name="action" value="home" class="submit-btn">Return Home</button>
+                        </div>
+                    </form>
+                    <div class="input-group">
+                        <form action="/move" method="post">
+                            <h2>PRESET ACTIONS</h2>
+                            <div class="button-grid">
+                                <button type="submit" name="action" value="plant1" class="submit-btn plant-btn">Go to
+                                    Plant 1</button>
+                                <button type="submit" name="action" value="plant2" class="submit-btn plant-btn">Go to
+                                    Plant 2</button>
+                                <button type="submit" name="action" value="water1" class="submit-btn water-btn">Water
+                                    Plant 1</button>
+                                <button type="submit" name="action" value="water2" class="submit-btn water-btn">Water
+                                    Plant 2</button>
+                            </div>
+                        </form>
+                        <form action="/set_mode" method="post">
+                            <h2>MODE CONTROL</h2>
+                            <div class="button-grid">
+                                <button type="submit" name="mode" value="default"
+                                    class="submit-btn plant-btn">Sequence</button>
+                                <button type="submit" name="mode" value="manual" class="submit-btn">Override</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+
+            <div class="card">
+                <h2>LIVE STATUS LOG</h2>
+                <div class="message-log" id="message-log">
+                    {% if log_history %}
+                    {% for entry in log_history %}
+                    <div class="message {{ entry.category }}">{{ entry.message }}</div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="message-placeholder" id="log-placeholder">
+                        Log is empty.<br>Connect to Arduino to begin.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card analytics-card">
+                <h2>MOISTURE ANALYTICS</h2>
+                <div class="chart-container">
+                    <canvas id="moistureChart"></canvas>
+                </div>
+                <div class="history-table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Value</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reading in db_readings %}
+                            <tr>
+                                <td>{{ reading.timestamp.split(' ')[1] if ' ' in reading.timestamp else
+                                    reading.timestamp }}</td>
+                                <td>{{ reading.moisture_value }}</td>
+                                <td>{{ reading.action_taken }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const ctx = document.getElementById('moistureChart').getContext('2d');
+        const labels = [{% for r in db_readings | reverse %}"{{ r.timestamp.split(' ')[1] if ' ' in r.timestamp else r.timestamp }}", {% endfor %}];
+        const data = [{% for r in db_readings | reverse %}{ { r.moisture_value } }, {% endfor %}];
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Moisture Level',
+                    data: data,
+                    borderColor: '#00ff8a',
+                    backgroundColor: 'rgba(0, 255, 138, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#00ff8a',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        ticks: { color: '#c9d1d9' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#c9d1d9' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

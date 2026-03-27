@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRISHIBODH - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .landing-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .hero-title {
+            font-size: 3em;
+            color: #58a6ff;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.5);
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .action-cards {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .action-card {
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid rgba(48, 54, 61, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            width: 250px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(88, 166, 255, 0.2);
+            border-color: #58a6ff;
+        }
+
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card-title {
+            color: #c9d1d9;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .card-desc {
+            color: #8b949e;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* Nav Adjustment */
+        .nav-bar {
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav-bar">
+        <span class="nav-link main" style="font-size: 1.2em;">KRISHIBODH SYSTEM INTERFACE</span>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="container landing-container">
+
+            <h1 class="hero-title">SELECT MODULE</h1>
+
+            <div class="action-cards">
+                <a href="{{ url_for('controller') }}" class="action-card">
+                    <span class="card-icon">🎛️</span>
+                    <span class="card-title">CONTROL CENTER</span>
+                    <span class="card-desc">Manual control, real-time monitoring and sensors.</span>
+                </a>
+
+                <a href="{{ url_for('experiments_page') }}" class="action-card">
+                    <span class="card-icon">🧪</span>
+                    <span class="card-title">EXPERIMENT LAB</span>
+                    <span class="card-desc">Generate hypotheses and run automated protocols.</span>
+                </a>
+
+                <a href="{{ url_for('chatbot') }}" class="action-card">
+                    <span class="card-icon">🤖</span>
+                    <span class="card-title">AI ASSISTANT</span>
+                    <span class="card-desc">Chat with Abhimanyu for insights and system help.</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

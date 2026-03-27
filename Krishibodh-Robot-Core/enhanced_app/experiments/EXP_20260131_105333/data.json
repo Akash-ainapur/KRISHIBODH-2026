@@ -1,0 +1,119 @@
+[
+    {
+        "timestamp": "2026-01-31T10:53:33.922526",
+        "type": "CYCLE_START",
+        "content": "Iteration 1",
+        "iteration": 1
+    },
+    {
+        "timestamp": "2026-01-31T10:53:54.501159",
+        "type": "IMAGE_SIDE_RAW",
+        "content": "20260131_105346_side_raw.jpg",
+        "iteration": 1
+    },
+    {
+        "timestamp": "2026-01-31T10:53:54.519237",
+        "type": "IMAGE_SIDE_ANALYZED",
+        "content": "20260131_105346_side_analyzed.jpg",
+        "iteration": 1
+    },
+    {
+        "timestamp": "2026-01-31T10:53:54.533097",
+        "type": "HEIGHT_STATS",
+        "content": {
+            "found": true,
+            "height": 1.7724867724867726,
+            "height_unit": "cm",
+            "status": "Unhealthy",
+            "score": 80
+        },
+        "iteration": 1
+    },
+    {
+        "timestamp": "2026-01-31T10:53:54.552637",
+        "type": "IMAGE_TOP_RAW",
+        "content": "20260131_105346_top_raw.jpg",
+        "iteration": 1
+    },
+    {
+        "timestamp": "2026-01-31T10:53:54.568308",
+        "type": "IMAGE_TOP_ANALYZED",
+        "content": "20260131_105346_top_analyzed.jpg",
+        "iteration": 1
+    },
+    {
+        "timestamp": "2026-01-31T10:53:54.584584",
+        "type": "HEALTH_STATS",
+        "content": {
+            "found": true,
+            "height": 359,
+            "height_unit": "px",
+            "status": "Healthy",
+            "score": 96
+        },
+        "iteration": 1
+    },
+    {
+        "timestamp": "2026-01-31T10:53:59.700914",
+        "type": "MOISTURE_READING",
+        "content": {
+            "value": 1023,
+            "action": "Exp #1: home"
+        },
+        "iteration": 1
+    },
+    {
+        "timestamp": "2026-01-31T10:54:27.101727",
+        "type": "CYCLE_START",
+        "content": "Iteration 2",
+        "iteration": 2
+    },
+    {
+        "timestamp": "2026-01-31T10:54:44.445089",
+        "type": "IMAGE_SIDE_RAW",
+        "content": "20260131_105438_side_raw.jpg",
+        "iteration": 2
+    },
+    {
+        "timestamp": "2026-01-31T10:54:44.466328",
+        "type": "IMAGE_SIDE_ANALYZED",
+        "content": "20260131_105438_side_analyzed.jpg",
+        "iteration": 2
+    },
+    {
+        "timestamp": "2026-01-31T10:54:44.485684",
+        "type": "HEIGHT_STATS",
+        "content": {
+            "found": true,
+            "height": 12.380952380952381,
+            "height_unit": "cm",
+            "status": "Healthy",
+            "score": 89
+        },
+        "iteration": 2
+    },
+    {
+        "timestamp": "2026-01-31T10:54:44.504554",
+        "type": "IMAGE_TOP_RAW",
+        "content": "20260131_105438_top_raw.jpg",
+        "iteration": 2
+    },
+    {
+        "timestamp": "2026-01-31T10:54:44.524737",
+        "type": "IMAGE_TOP_ANALYZED",
+        "content": "20260131_105438_top_analyzed.jpg",
+        "iteration": 2
+    },
+    {
+        "timestamp": "2026-01-31T10:54:44.542966",
+        "type": "HEALTH_STATS",
+        "content": {
+            "found": true,
+            "height": 317,
+            "height_unit": "px",
+            "status": "Healthy",
+            "score": 99
+        },
+        "iteration": 2
+    }
+]

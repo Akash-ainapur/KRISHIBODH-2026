@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wide-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <h1 style="margin: 0;">SCIENTIFIC RESEARCH DASHBOARD</h1>
+        <div class="card" style="margin: 0; padding: 10px 20px; border-color: #2ea043;">
+            <span style="color: #8b949e; font-size: 0.8em; text-transform: uppercase;">System Efficiency</span>
+            <div style="font-size: 1.5em; font-weight: bold; color: #2ea043;"><span id="efficiency-score">0</span>%
+            </div>
+        </div>
+    </div>
+
+    <!-- 4-Chart Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px;">
+
+        <!-- 1. Moisture Trends -->
+        <div class="card">
+            <h3 style="margin-top: 0; font-size: 0.9em; color: #8b949e;">MOISTURE TRENDS (CONTROL VS TREATMENT)</h3>
+            <div style="height: 250px;">
+                <canvas id="trendsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 2. Watering Efficiency -->
+        <div class="card">
+            <h3 style="margin-top: 0; font-size: 0.9em; color: #8b949e;">RESOURCE CONSUMPTION (WATERING EVENTS)</h3>
+            <div style="height: 250px;">
+                <canvas id="efficiencyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 3. Stability Distribution -->
+        <div class="card">
+            <h3 style="margin-top: 0; font-size: 0.9em; color: #8b949e;">MOISTURE STABILITY (OPTIMAL ZONE %)</h3>
+            <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
+                <canvas id="stabilityChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 4. Recent Data Log -->
+        <div class="card">
+            <h3 style="margin-top: 0; font-size: 0.9em; color: #8b949e;">LIVE SENSOR LOG</h3>
+            <div style="height: 250px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85em; color: #c9d1d9;">
+                    <thead style="position: sticky; top: 0; background: #161b22;">
+                        <tr style="border-bottom: 1px solid #30363d;">
+                            <th style="text-align: left; padding: 8px;">Time</th>
+                            <th style="text-align: left; padding: 8px;">Reading</th>
+                            <th style="text-align: left; padding: 8px;">Context</th>
+                        </tr>
+                    </thead>
+                    <tbody id="live-log-body">
+                        {% for r in db_readings | reverse %}
+                        <tr style="border-bottom: 1px solid rgba(48, 54, 61, 0.5);">
+                            <td style="padding: 8px;">{{ r.timestamp.split(' ')[1] if ' ' in r.timestamp else
+                                r.timestamp }}</td>
+                            <td style="padding: 8px; color: #58a6ff;">{{ r.moisture_value }}</td>
+                            <td style="padding: 8px; color: #8b949e;">{{ r.action_taken }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Images Section -->
+    <div class="card" style="margin-top: 20px;">
+        <h3 style="margin-top: 0; font-size: 0.9em; color: #8b949e;">LATEST ANALYZED IMAGES (SIDE & TOP)</h3>
+        <div style="display: flex; gap: 20px; overflow-x: auto; padding: 10px 0;">
+            <div id="image-gallery" style="display: flex; gap: 20px;">
+                <!-- Images will be injected here via JS -->
+                <div
+                    style="background: rgba(255,255,255,0.05); width: 300px; height: 200px; display: flex; align-items: center; justify-content: center; color: #8b949e;">
+                    Waiting for capture...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let charts = {};
+
+    function initCharts() {
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: '#8b949e', font: { family: 'monospace' } } }
+            }
+        };
+
+        // 1. Moisture Trends
+        charts.trends = new Chart(document.getElementById('trendsChart'), {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'Control', borderColor: '#8b949e', backgroundColor: '#8b949e', data: [], tension: 0.3, pointRadius: 2 },
+                    { label: 'Treatment', borderColor: '#2ea043', backgroundColor: '#2ea043', data: [], tension: 0.3, pointRadius: 2 }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: { min: 400, max: 700, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b949e' } },
+                    x: { grid: { display: false }, ticks: { color: '#8b949e' } }
+                }
+            }
+        });
+
+        // 2. Efficiency
+        charts.efficiency = new Chart(document.getElementById('efficiencyChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Control P1', 'Treatment P2'],
+                datasets: [{ label: 'Water Events', data: [0, 0], backgroundColor: ['#30363d', '#2ea043'] }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8b949e', stepSize: 1 } },
+                    x: { ticks: { color: '#8b949e' } }
+                }
+            }
+        });
+
+        // 3. Stability
+        charts.stability = new Chart(document.getElementById('stabilityChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Dry', 'Optimal', 'Wet'],
+                datasets: [{ data: [0, 0, 0], backgroundColor: ['#f85149', '#2ea043', '#58a6ff'], borderWidth: 0 }]
+            },
+            options: {
+                ...commonOptions,
+                cutout: '75%',
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
+
+    async function updateDashboard() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const expId = params.get('experiment_id') || "";
+            const res = await fetch(`{{ url_for('main.dashboard_data') }}?experiment_id=${expId}`);
+            const data = await res.json();
+
+            // Update KPIs
+            document.getElementById('efficiency-score').innerText = data.performance;
+
+            // Update Charts
+            charts.trends.data.labels = data.trends.labels;
+            charts.trends.data.datasets[0].data = data.trends.control;
+            charts.trends.data.datasets[1].data = data.trends.treatment;
+            charts.trends.update('none');
+
+            charts.efficiency.data.datasets[0].data = data.efficiency.data;
+            charts.efficiency.update('none');
+
+            charts.stability.data.datasets[0].data = data.stability.data;
+            charts.stability.update('none');
+
+            // Update Images
+            if (data.images && data.images.length > 0) {
+                const gallery = document.getElementById('image-gallery');
+                gallery.innerHTML = ""; // Clear
+
+                // Show last 4 images
+                data.images.slice(-4).reverse().forEach(img => {
+                    const div = document.createElement('div');
+                    div.style.cssText = "position: relative; border: 1px solid #30363d; padding: 5px; background: #0d1117;";
+
+                    const el = document.createElement('img');
+                    // Use exp_id from the image object itself
+                    el.src = `/experiment_images/${img.exp_id}/${img.filename}`;
+                    el.style.cssText = "width: 300px; height: auto; display: block;";
+
+                    const label = document.createElement('div');
+                    label.innerText = `${img.type} - ${img.timestamp.split('T')[1].split('.')[0]}`;
+                    label.style.cssText = "position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.7); padding: 2px 5px; font-size: 0.8em; color: white;";
+
+                    div.appendChild(el);
+                    div.appendChild(label);
+                    gallery.appendChild(div);
+                });
+            }
+
+        } catch (e) {
+            console.error("Dashboard update failed:", e);
+        }
+    }
+
+    initCharts();
+    updateDashboard();
+    setInterval(updateDashboard, 5000); // Live poll every 5s
+</script>
+{% endblock %}

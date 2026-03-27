@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRISHIBODH AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Tailwind or similar could go here if requested, but sticking to custom CSS -->
+</head>
+
+<body>
+    <div class="nav-bar">
+        <a href="{{ url_for('main.home') }}" class="nav-link">HOME</a>
+        <a href="{{ url_for('main.controller') }}" class="nav-link">CONTROLLER</a>
+        <a href="{{ url_for('main.experiments') }}" class="nav-link">EXPERIMENTS</a>
+        <a href="{{ url_for('main.chatbot') }}" class="nav-link">CHATBOT</a>
+        <a href="{{ url_for('main.dashboard') }}" class="nav-link">DASHBOARD</a>
+    </div>
+
+    <div class="page-wrapper">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
+</html>

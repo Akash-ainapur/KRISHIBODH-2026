@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    :root {
+        --card-bg: #161b22;
+        --card-border: #30363d;
+        --text-primary: #c9d1d9;
+        --text-secondary: #8b949e;
+        --accent-blue: #58a6ff;
+        --accent-green: #2ea043;
+        --accent-purple: #bf94ff;
+        --accent-cyan: #00bcd4;
+        --hover-bg: #21262d;
+    }
+
+    body {
+        background-color: #0d1117;
+        color: var(--text-primary);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    .hero-section {
+        text-align: center;
+        padding: 60px 20px 40px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, #58a6ff, #bf94ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
+    }
+
+    .hero-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .nav-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 30px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 220px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-card:hover {
+        transform: translateY(-5px);
+        background-color: var(--hover-bg);
+        border-color: var(--text-secondary);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--card-border);
+        transition: background 0.3s ease;
+    }
+
+    .nav-card.controller:hover::before {
+        background: var(--accent-blue);
+    }
+
+    .nav-card.experiments:hover::before {
+        background: var(--accent-green);
+    }
+
+    .nav-card.dashboard:hover::before {
+        background: var(--accent-purple);
+    }
+
+    .nav-card.chatbot:hover::before {
+        background: var(--accent-cyan);
+    }
+
+    .card-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        opacity: 0.8;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 10px 0;
+        color: var(--text-primary);
+    }
+
+    .card-desc {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        text-align: center;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* Icon placeholders using emojis or simple styled elements since no icon lib is guaranteed */
+    .icon-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.05);
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+
+    .controller .icon-placeholder {
+        color: var(--accent-blue);
+    }
+
+    .experiments .icon-placeholder {
+        color: var(--accent-green);
+    }
+
+    .dashboard .icon-placeholder {
+        color: var(--accent-purple);
+    }
+
+    .chatbot .icon-placeholder {
+        color: var(--accent-cyan);
+    }
+</style>
+
+<div class="hero-section">
+    <h1 class="hero-title">KRISHIBODH AI SYSTEM</h1>
+    <p class="hero-subtitle">Advanced autonomous plant care and research platform. Select an interface to begin control
+        or monitoring.</p>
+</div>
+
+<div class="grid-container">
+
+    <a href="{{ url_for('main.controller') }}" class="nav-card controller">
+        <div class="icon-placeholder">🎮</div>
+        <h2 class="card-title" style="color: var(--accent-blue)">MANUAL CONTROLLER</h2>
+        <p class="card-desc">Directly control hardware, motors, irrigation, and lights manually.</p>
+    </a>
+
+    <a href="{{ url_for('main.experiments') }}" class="nav-card experiments">
+        <div class="icon-placeholder">🧬</div>
+        <h2 class="card-title" style="color: var(--accent-green)">AI EXPERIMENTS</h2>
+        <p class="card-desc">Define research hypotheses and execute autonomous plant care protocols.</p>
+    </a>
+
+    <a href="{{ url_for('main.dashboard') }}" class="nav-card dashboard">
+        <div class="icon-placeholder">📊</div>
+        <h2 class="card-title" style="color: var(--accent-purple)">DATA DASHBOARD</h2>
+        <p class="card-desc">Visualize moisture levels, trends, and system efficiency metrics over time.</p>
+    </a>
+
+    <a href="{{ url_for('main.chatbot') }}" class="nav-card chatbot">
+        <div class="icon-placeholder">🤖</div>
+        <h2 class="card-title" style="color: var(--accent-cyan)">ABHIMANYU AI</h2>
+        <p class="card-desc">Interactive AI assistant for troubleshooting and command-based control.</p>
+    </a>
+
+</div>
+{% endblock %}

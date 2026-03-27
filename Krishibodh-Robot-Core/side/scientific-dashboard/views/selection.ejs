@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol Selection | Scientific Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-wrapper">
+        <nav class="navbar">
+            <div class="brand">
+                SCIENTIFIC <span>DASHBOARD</span>
+            </div>
+            <div class="version-tag">v1.0.0-RC1</div>
+        </nav>
+
+        <div class="container">
+            <div class="grid-dashboard">
+                <!-- Sidebar / Control Panel -->
+                <aside>
+                    <div class="card">
+                        <div class="card-title">System Status</div>
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="flex-between">
+                                <span style="color: var(--text-muted); font-size: 0.8rem;">SERVER</span>
+                                <span style="color: var(--accent-primary); font-size: 0.8rem;">ONLINE</span>
+                            </div>
+                            <div class="flex-between">
+                                <span style="color: var(--text-muted); font-size: 0.8rem;">DEVICE</span>
+                                <span style="color: var(--accent-secondary); font-size: 0.8rem;">CONNECTED</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top: 24px;">
+                        <div class="card-title">Quick Actions</div>
+                        <button class="btn-control" onclick="window.location.reload()">Refresh Selection</button>
+                        <button class="btn-control" style="margin-top: 12px;">View Logs</button>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main>
+                    <div class="card">
+                        <div class="card-title">Protocol Configuration</div>
+                        <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 0.9rem;">
+                            Select or define the experimental protocol for the current run. Ensure all parameters are
+                            verified before execution.
+                        </p>
+
+                        <div class="input-group">
+                            <label for="protocolInput"
+                                style="display: block; margin-bottom: 12px; font-weight: bold; color: var(--accent-primary); font-size: 0.85rem; letter-spacing: 0.05em;">JSON
+                                DEFINITION</label>
+                            <textarea id="protocolInput" class="input-area" placeholder='{
+  "experiment_id": "EXP-2026-A1",
+  "cycles": 10,
+  "interval": "30m"
+}'></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 16px; margin-top: 24px;">
+                            <button class="btn btn-primary" id="validateBtn">
+                                Validate Protocol
+                            </button>
+                            <button class="btn btn-text">Load Template</button>
+                        </div>
+
+                        <div id="validationOutput" class="json-preview" style="display: none;"></div>
+                    </div>
+
+                    <div class="workflow-steps">
+                        <span class="active-step">01. SELECTION</span>
+                        <span>&mdash;</span>
+                        <span>02. CALIBRATION</span>
+                        <span>&mdash;</span>
+                        <span>03. EXECUTION</span>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        document.getElementById('validateBtn').addEventListener('click', () => {
+            const input = document.getElementById('protocolInput').value;
+            const output = document.getElementById('validationOutput');
+
+            try {
+                const json = JSON.parse(input);
+                output.style.display = 'block';
+                output.style.color = '#34d399';
+                output.textContent = 'VALID JSON: ' + JSON.stringify(json, null, 2);
+                // Here you would typically emit to server
+                socket.emit('protocol_selected', json);
+            } catch (e) {
+                output.style.display = 'block';
+                output.style.color = '#f87171';
+                output.textContent = 'INVALID JSON: ' + e.message;
+            }
+        });
+
+        socket.on('connect', () => {
+            console.log('Connected to dashboard server');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+{
+    "experiment_name": "Preventing Drought Stress via Precision Moisture Management",
+    "hypothesis_analysis": "This protocol explores the sensor-feedback system's efficacy in preventing underwatering and drought stress, a common issue with infrequent fixed watering. PLANT_1 receives infrequent, large-volume watering, simulating neglect or insufficient fixed schedules, while PLANT_2 consistently maintains adequate moisture, directly testing the hypothesis against water scarcity.",
+    "duration_days": 14,
+    "plants": [
+        {
+            "id": "PLANT_1",
+            "role": "CONTROL",
+            "description": "Simulated Underwatering (Low Frequency, Potentially Inadequate)",
+            "watering_strategy": "FIXED_TIME",
+            "parameters": {
+                "interval_hours": 24,
+                "water_seconds": 7,
+                "moisture_threshold": null
+            }
+        },
+        {
+            "id": "PLANT_2",
+            "role": "TREATMENT",
+            "description": "Sensor-Optimized Moisture (Target: 500 - Consistent Hydration)",
+            "watering_strategy": "MOISTURE_TARGET",
+            "parameters": {
+                "interval_hours": 2,
+                "water_seconds": 4,
+                "moisture_threshold": 500
+            }
+        }
+    ],
+    "data_collection": {
+        "camera_interval_hours": 4,
+        "moisture_log_interval_minutes": 30,
+        "notes": "Images will be used to measure Leaf Area and Height. Soil moisture levels will be continuously logged for both plants."
+    }
+}

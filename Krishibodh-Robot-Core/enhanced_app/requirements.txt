@@ -1,0 +1,9 @@
+flask
+pyserial
+requests
+google-generativeai
+opencv-python
+rembg
+pillow
+onnxruntime
+numpy

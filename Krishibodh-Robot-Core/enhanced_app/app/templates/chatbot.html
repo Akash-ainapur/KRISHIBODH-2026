@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; padding: 0;">
+    <div class="card" style="margin: 0; padding: 25px;">
+        <h1>ABHIMANYU AI CHATBOT</h1>
+        <p style="text-align: center; color: var(--info-color); margin-bottom: 20px;">
+            Ask for troubleshooting, optimization tips, or general farming knowledge.<br>
+            <strong>Try: "Water plant 1", "Go home", or "Move to 500, 1000, 5000".</strong>
+        </p>
+
+        <div class="chat-window" id="chat-window"
+            style="height: 400px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #30363d;">
+            <div class="message info" style="margin-bottom: 10px;">
+                Welcome to ABHIMANYU, your agricultural intelligence unit. I am here to help you optimize the KRISHIBODH
+                system. I can execute commands if you are connected to the robot. How can I assist you today?
+            </div>
+        </div>
+
+        <div class="chat-input-area" style="display: flex; gap: 10px;">
+            <input type="text" id="user-input" placeholder="Type your question or command here..."
+                style="flex-grow: 1; padding: 12px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: white;"
+                onkeydown="if(event.key === 'Enter') sendMessage()">
+            <button class="submit-btn plant-btn" id="send-button" onclick="sendMessage()"
+                style="white-space: nowrap;">Send</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const chatWindow = document.getElementById('chat-window');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    function addMessage(text, sender) {
+        const msg = document.createElement('div');
+        msg.className = `message ${sender === 'user' ? 'info' : 'success'}`;
+        msg.style.marginBottom = '10px';
+        msg.style.padding = '10px';
+        msg.style.borderRadius = '6px';
+        msg.style.background = sender === 'user' ? 'rgba(56, 139, 253, 0.1)' : 'rgba(35, 134, 54, 0.1)';
+        msg.style.borderLeft = `4px solid ${sender === 'user' ? '#388bfd' : '#238636'}`;
+        msg.innerHTML = `<strong>${sender.toUpperCase()}:</strong> ${text}`;
+        chatWindow.appendChild(msg);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        addMessage(text, 'user');
+        userInput.value = '';
+        sendButton.disabled = true;
+
+        try {
+            const response = await fetch("{{ url_for('main.ai_command') }}", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: text })
+            });
+            const data = await response.json();
+
+            if (data.command_executed) {
+                addMessage(`🤖 Executing: <strong>${data.command_executed}</strong><br>${data.response}`, 'ai');
+            } else {
+                addMessage(data.response, 'ai');
+            }
+        } catch (e) {
+            addMessage("Error communicating with AI service.", 'error');
+        } finally {
+            sendButton.disabled = false;
+        }
+    }
+</script>
+{% endblock %}

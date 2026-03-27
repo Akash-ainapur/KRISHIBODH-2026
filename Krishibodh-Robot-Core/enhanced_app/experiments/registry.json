@@ -1,0 +1,273 @@
+[
+    {
+        "id": "EXP_20260131_135408",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T13:54:08.861906",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T13:54:50.210966"
+    },
+    {
+        "id": "EXP_20260131_135338",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T13:53:38.037900",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T13:53:52.957447"
+    },
+    {
+        "id": "EXP_20260131_120954",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T12:09:54.351391",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T12:10:41.806035"
+    },
+    {
+        "id": "EXP_20260131_120151",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T12:01:51.806394",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T12:02:33.656114"
+    },
+    {
+        "id": "EXP_20260131_114921",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T11:49:21.444833",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T11:51:00.171623"
+    },
+    {
+        "id": "EXP_20260131_114015",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T11:40:15.256220",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T11:41:06.903057"
+    },
+    {
+        "id": "EXP_20260131_110541",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T11:05:41.715415",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T11:06:41.943255"
+    },
+    {
+        "id": "EXP_20260131_110248",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T11:02:48.646262",
+        "status": "RUNNING",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ..."
+    },
+    {
+        "id": "EXP_20260131_105509",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:55:09.530579",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T10:55:54.089710"
+    },
+    {
+        "id": "EXP_20260131_105333",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:53:33.920322",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T10:54:55.585539"
+    },
+    {
+        "id": "EXP_20260131_105135",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:51:35.280557",
+        "status": "RUNNING",
+        "hypothesis": "Testing: Plants grown under moisture-optimized irrigation w..."
+    },
+    {
+        "id": "EXP_20260131_104818",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:48:18.948577",
+        "status": "RUNNING",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ..."
+    },
+    {
+        "id": "EXP_20260131_103844",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:38:44.312661",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T10:40:53.075520"
+    },
+    {
+        "id": "EXP_20260131_103650",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:36:50.403866",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T10:38:11.656057"
+    },
+    {
+        "id": "EXP_20260131_103200",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:32:00.308219",
+        "status": "RUNNING",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ..."
+    },
+    {
+        "id": "EXP_20260131_102557",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:25:57.749900",
+        "status": "RUNNING",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ..."
+    },
+    {
+        "id": "EXP_20260131_101755",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:17:55.304895",
+        "status": "RUNNING",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ..."
+    },
+    {
+        "id": "EXP_20260131_101429",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:14:29.796039",
+        "status": "RUNNING",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ..."
+    },
+    {
+        "id": "EXP_20260131_100530",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:05:30.001479",
+        "status": "RUNNING",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ..."
+    },
+    {
+        "id": "EXP_20260131_100256",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T10:02:56.710640",
+        "status": "STOPPED",
+        "hypothesis": "Testing: Plants grown under moisture-optimized irrigation w...",
+        "end_time": "2026-01-31T10:04:12.042712"
+    },
+    {
+        "id": "EXP_20260131_095544",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:55:44.974809",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T10:02:07.352847"
+    },
+    {
+        "id": "EXP_20260131_095032",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:50:32.321074",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T09:51:26.715132"
+    },
+    {
+        "id": "EXP_20260131_093714",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:37:14.089181",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T09:38:02.904366"
+    },
+    {
+        "id": "EXP_20260131_093343",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:33:43.243074",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T09:34:28.026387"
+    },
+    {
+        "id": "EXP_20260131_093201",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:32:01.732111",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T09:32:48.480233"
+    },
+    {
+        "id": "EXP_20260131_092915",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:29:15.842677",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T09:29:57.992313"
+    },
+    {
+        "id": "EXP_20260131_092411",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:24:11.164737",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T09:24:54.046749"
+    },
+    {
+        "id": "EXP_20260131_092048",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:20:48.158547",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T09:21:40.253002"
+    },
+    {
+        "id": "EXP_20260131_091657",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T09:16:57.167001",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T09:17:41.519622"
+    },
+    {
+        "id": "EXP_20260131_085859",
+        "title": "Moisture Optimization (Primary Demo)",
+        "start_time": "2026-01-31T08:58:59.120117",
+        "status": "STOPPED",
+        "hypothesis": "",
+        "end_time": "2026-01-31T08:59:33.551059"
+    },
+    {
+        "id": "EXP_20260131_084435",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T08:44:35.995971",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T08:45:27.318122"
+    },
+    {
+        "id": "EXP_20260131_083905",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T08:39:05.958704",
+        "status": "STOPPED",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ...",
+        "end_time": "2026-01-31T08:39:43.731650"
+    },
+    {
+        "id": "EXP_20260131_083439",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T08:34:39.874326",
+        "status": "RUNNING",
+        "hypothesis": "Testing: \u201cPlants grown under moisture-optimized irrigation ..."
+    },
+    {
+        "id": "EXP_20260131_064629",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T06:46:29.676240",
+        "status": "STOPPED",
+        "hypothesis": "Testing: fhfghf...",
+        "end_time": "2026-01-31T06:51:32.828329"
+    },
+    {
+        "id": "EXP_20260131_064214",
+        "title": "Smart Irrigation Growth Comparison",
+        "start_time": "2026-01-31T06:42:14.406264",
+        "status": "STOPPED",
+        "hypothesis": "Testing: uybfuerbg...",
+        "end_time": "2026-01-31T06:43:52.535643"
+    }
+]

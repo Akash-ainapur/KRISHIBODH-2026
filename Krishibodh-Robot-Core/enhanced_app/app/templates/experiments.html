@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wide-container">
+    <h1>EXPERIMENTAL PROTOCOL GENERATOR</h1>
+
+    <div class="card">
+        <h2>1. DEFINE HYPOTHESIS</h2>
+        <div class="input-group">
+            <textarea id="hypothesis"
+                style="width: 100%; height: 100px; background: rgba(13, 17, 23, 0.5); border: 1px solid #30363d; color: #c9d1d9; padding: 10px; border-radius: 6px; margin-bottom: 15px;"
+                placeholder="e.g., 'Moving frequently improves airflow.'"></textarea>
+            <button onclick="generatePlans()" class="submit-btn" style="width: auto; padding: 10px 30px;">GENERATE
+                PLANS</button>
+        </div>
+    </div>
+
+    <div class="card"
+        style="margin-bottom: 25px; border-left: 4px solid {{ '#2ea043' if is_connected else '#f85149' }};">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h3 style="margin: 0; color: {{ '#2ea043' if is_connected else '#f85149' }};">
+                    PROTOCOL CONNECTION: {{ "READY" if is_connected else "LOCKED" }}
+                </h3>
+                <p style="margin: 5px 0 0 0; color: #8b949e; font-size: 0.9em;">
+                    {{ "System online. Experiments will execute via " ~ connected_port ~ "." if is_connected else
+                    "Select COM port to unlock experimental controls." }}
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center;">
+                {% if not is_connected %}
+                <form action="{{ url_for('main.connect') }}" method="POST" style="display: flex; gap: 10px; margin: 0;">
+                    <input type="hidden" name="next" value="main.experiments">
+                    <select name="port"
+                        style="padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #30363d; color: white; border-radius: 6px; font-family: monospace;">
+                        {% for port in available_ports %}
+                        <option value="{{ port }}">{{ port }}</option>
+                        {% endfor %}
+                        {% if not available_ports %}
+                        <option disabled selected>No Ports</option>
+                        {% endif %}
+                    </select>
+                    <button type="submit" class="submit-btn"
+                        style="width: auto; padding: 10px 20px; background: #238636; border-color: #2ea043;">CONNECT
+                        ROBOT</button>
+                </form>
+                {% else %}
+                <form action="{{ url_for('main.disconnect') }}" method="POST" style="margin: 0;">
+                    <input type="hidden" name="next" value="main.experiments">
+                    <button type="submit" class="submit-btn"
+                        style="width: auto; padding: 10px 20px; background: #da3633; border-color: #f85149;">DISCONNECT</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div id="plans-container" class="card" style="display: none;">
+        <h2>2. SELECT EXPERIMENTAL PLAN</h2>
+        <div id="plans-grid" class="plan-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <!-- Plans injected here -->
+        </div>
+    </div>
+
+    <div id="confirmation-container" class="card"
+        style="border-color: #2ea043; {% if not is_running %}display: none;{% endif %}">
+        <h2 style="color: #2ea043;">PROTOCOL STATUS: <span id="run-state">{{ "RUNNING" if is_running else "IDLE"
+                }}</span></h2>
+
+        <div id="report-area"
+            style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #30363d;">
+            <p style="margin: 5px 0;"><strong>Iteration:</strong> <span id="iter-count">0</span></p>
+            <p style="margin: 5px 0;"><strong>Current Action:</strong> <span id="curr-step" style="color: #58a6ff;">{{
+                    "Checking..." if is_running else "None" }}</span></p>
+            <p style="margin: 5px 0;"><strong>Elapsed Time:</strong> <span id="elapsed-time">0</span>s</p>
+        </div>
+
+        <div id="history-area" style="margin-top: 20px;">
+            <h3 style="font-size: 0.9em; color: #8b949e; border-bottom: 1px solid #30363d; padding-bottom: 5px;">RECENT
+                ITERATIONS</h3>
+            <div id="iteration-history" style="max-height: 150px; overflow-y: auto; font-size: 0.85em; color: #c9d1d9;">
+                <!-- Iteration history items go here -->
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 20px; margin-top: 20px;">
+            <button id="stop-btn" onclick="stopExperiment()" class="submit-btn"
+                style="background-color: rgba(218, 54, 51, 0.8); border-color: #f85149; color: white; {% if not is_running %}display: none;{% endif %}">STOP
+                EXPERIMENT</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let statusInterval = null;
+
+    // Start polling if already running on page load
+    {% if is_running %}
+    startPolling();
+    {% endif %}
+
+    function startPolling() {
+        if (statusInterval) clearInterval(statusInterval);
+        statusInterval = setInterval(updateStatus, 1000);
+    }
+
+    let lastKnownIteration = 0;
+
+    async function updateStatus() {
+        try {
+            const res = await fetch("{{ url_for('main.experiment_status') }}");
+            const data = await res.json();
+
+            document.getElementById('iter-count').innerText = data.iteration;
+            document.getElementById('curr-step').innerText = data.current_step;
+            document.getElementById('elapsed-time').innerText = data.elapsed;
+
+            if (data.iteration > lastKnownIteration) {
+                if (lastKnownIteration > 0) {
+                    addIterationToHistory(lastKnownIteration, "Completed successfully");
+                }
+                lastKnownIteration = data.iteration;
+            }
+
+            if (!data.is_running) {
+                document.getElementById('run-state').innerText = "STOPPED";
+                document.getElementById('run-state').style.color = "#f85149";
+                document.getElementById('stop-btn').style.display = 'none';
+                clearInterval(statusInterval);
+                if (data.iteration > 0) {
+                    addIterationToHistory(data.iteration, "Cycle Finished");
+                }
+            }
+        } catch (e) {
+            console.error("Status check failed", e);
+        }
+    }
+
+    function addIterationToHistory(num, log) {
+        const history = document.getElementById('iteration-history');
+        if (!history) return;
+        const item = document.createElement('div');
+        item.style = "padding: 8px; border-bottom: 1px solid rgba(48, 54, 61, 0.5); display: flex; justify-content: space-between;";
+        item.innerHTML = `<span>Iteration #${num}</span> <span style="color: #2ea043;">${log}</span>`;
+        history.prepend(item);
+    }
+    async function generatePlans() {
+        const hypothesis = document.getElementById('hypothesis').value;
+        if (!hypothesis) return alert("Enter hypothesis");
+
+        const res = await fetch("{{ url_for('main.generate_plans') }}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ hypothesis })
+        });
+        const data = await res.json();
+        displayPlans(data.plans);
+    }
+
+    function displayPlans(plans) {
+        const grid = document.getElementById('plans-grid');
+        grid.innerHTML = '';
+
+        plans.forEach(plan => {
+            const card = document.createElement('div');
+            card.className = "card plan-card";
+            card.style = "background: rgba(13, 17, 23, 0.7); padding: 0; border: 1px solid #30363d; border-radius: 10px; margin-bottom: 30px; overflow: hidden; position: relative;";
+
+            // Handle optional fields nicely
+            const statusColor = plan.status_color || 'gray';
+            const status = plan.status || 'Draft';
+            const hyp = plan.hypothesis_summary || "No specific hypothesis provided.";
+
+            // Build Variables Section
+            let varsHtml = '';
+            if (plan.variables) {
+                varsHtml = `
+                <div style="display: flex; gap: 15px; margin: 20px 0;">
+                    <div style="flex: 1; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 3px solid #8b949e;">
+                        <span style="font-size: 0.8em; text-transform: uppercase; color: #8b949e; display: block; margin-bottom: 5px;">Control Group</span>
+                        <strong style="color: #c9d1d9; display: block;">${plan.variables.control.label}</strong>
+                        <span style="font-size: 0.85em; color: #8b949e;">${plan.variables.control.details}</span>
+                    </div>
+                    <div style="flex: 1; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border-left: 3px solid #2ea043;">
+                        <span style="font-size: 0.8em; text-transform: uppercase; color: #2ea043; display: block; margin-bottom: 5px;">Test Group</span>
+                        <strong style="color: #c9d1d9; display: block;">${plan.variables.treatment.label}</strong>
+                        <span style="font-size: 0.85em; color: #8b949e;">${plan.variables.treatment.details}</span>
+                    </div>
+                </div>`;
+            }
+
+            // Build Metrics Section
+            let metricsHtml = '';
+            if (plan.metrics) {
+                metricsHtml = `<div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">`;
+                plan.metrics.forEach(m => {
+                    metricsHtml += `
+                    <div style="background: #161b22; border: 1px solid #30363d; padding: 10px 15px; border-radius: 6px; flex: 1; min-width: 120px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.5em;">${m.icon || '📊'}</span>
+                        <div>
+                            <div style="font-size: 0.8em; color: #8b949e;">${m.name}</div>
+                            <div style="font-size: 1em; font-weight: bold; color: #c9d1d9;">${m.value} <span style="font-size: 0.8em; font-weight: normal;">${m.unit || ''}</span></div>
+                        </div>
+                    </div>`;
+                });
+                metricsHtml += `</div>`;
+            }
+
+            // Build Timeline Section
+            let timelineHtml = '';
+            if (plan.timeline) {
+                timelineHtml = `
+                <div style="background: rgba(88, 166, 255, 0.1); border-top: 1px solid rgba(88, 166, 255, 0.2); border-bottom: 1px solid rgba(88, 166, 255, 0.2); padding: 10px 20px; margin: 0 -20px 20px -20px; display: flex; justify-content: space-between; font-family: monospace; font-size: 0.9em; color: #58a6ff;">
+                    <span>📅 Start: ${plan.timeline.start}</span>
+                    <span>⏳ Duration: ${plan.timeline.duration}</span>
+                    <span>📸 Next Data: ${plan.timeline.next_capture}</span>
+                </div>`;
+            }
+
+            // Build Progress
+            let progressHtml = '';
+            if (plan.progress) {
+                progressHtml = `
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85em; color: #8b949e; margin-bottom: 5px;">
+                        <span>Data Collection Progress</span>
+                        <span>${plan.progress.collected}/${plan.progress.total} Samples</span>
+                    </div>
+                    <div style="width: 100%; height: 6px; background: #30363d; border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${plan.progress.percent}%; height: 100%; background: #2ea043;"></div>
+                    </div>
+                </div>`;
+            }
+
+            card.innerHTML = `
+            <div style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                    <h3 style="color: #58a6ff; margin: 0; font-size: 1.4em;">${plan.title}</h3>
+                    <span style="background: ${statusColor}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75em; font-weight: bold; text-transform: uppercase;">● ${status}</span>
+                </div>
+                
+                <p style="color: #c9d1d9; font-style: italic; font-size: 1em; margin-bottom: 20px; border-left: 2px solid #8b949e; padding-left: 10px;">
+                    "${hyp}"
+                </p>
+
+                ${varsHtml}
+                ${metricsHtml}
+            </div>
+
+            ${timelineHtml}
+
+            <div style="padding: 0 20px 20px 20px;">
+                ${progressHtml}
+
+                <button class="submit-btn" 
+                        onclick='startExperiment(${JSON.stringify(plan)})' 
+                        style="width: 100%; {{ 'opacity: 0.5; cursor: not-allowed;' if not is_connected else '' }}"
+                        {{ 'disabled' if not is_connected else '' }}>
+                    {{ "START PROTOCOL" if is_connected else "CONNECT ROBOT FIRST" }}
+                </button>
+            </div>
+        `;
+            grid.appendChild(card);
+        });
+
+        document.getElementById('plans-container').style.display = 'block';
+    }
+
+    async function startExperiment(plan) {
+        if (!confirm("Start experiment " + plan.title + "?")) return;
+
+        const res = await fetch("{{ url_for('main.start_experiment') }}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plan })
+        });
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('plans-container').style.display = 'none';
+            document.getElementById('confirmation-container').style.display = 'block';
+            document.getElementById('stop-btn').style.display = 'block';
+            document.getElementById('run-state').innerText = "RUNNING";
+            document.getElementById('run-state').style.color = "#2ea043";
+            startPolling();
+            alert("Experiment Started!");
+        } else {
+            alert("Error: " + data.message);
+        }
+    }
+
+    async function stopExperiment() {
+        const res = await fetch("{{ url_for('main.stop_experiment') }}", { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('stop-btn').style.display = 'none';
+            document.getElementById('status-text').innerText = "Experiment Stopped";
+            alert("Experiment Stopped");
+        }
+    }
+</script>
+{% endblock %}
