@@ -4,6 +4,7 @@ from serial.tools import list_ports
 import time
 from datetime import datetime
 import os
+import json
 import urllib.request
 import urllib.error
 
@@ -545,14 +546,26 @@ def gemini_chat():
     if not key:
         return jsonify({"error": {"message": "GEMINI_API_KEY is not set on the server."}}), 500
     model = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
-    upstream = urllib.request.Request(
-        GEMINI_URL.format(model=model),
-        data=request.get_data(),
-        headers={"Content-Type": "application/json", "x-goog-api-key": key},
-    )
-    try:
+    payload = request.get_json(silent=True) or {}
+
+    def call(body):
+        upstream = urllib.request.Request(
+            GEMINI_URL.format(model=model),
+            data=json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json", "x-goog-api-key": key},
+        )
         with urllib.request.urlopen(upstream, timeout=60) as resp:
             return resp.read(), resp.status, {"Content-Type": "application/json"}
+
+    try:
+        try:
+            return call(payload)
+        except urllib.error.HTTPError as e:
+            # Free keys get no Google Search quota (429); answer without search instead of failing.
+            if e.code != 429 or "tools" not in payload:
+                raise
+            payload.pop("tools")
+            return call(payload)
     except urllib.error.HTTPError as e:
         # Pass Gemini's own error body through; the page already reads error.message.
         return e.read(), e.code, {"Content-Type": "application/json"}
