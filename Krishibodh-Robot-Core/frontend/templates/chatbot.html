@@ -47,8 +47,7 @@
 
     <script>
         // --- Gemini API Configuration ---
-        const API_KEY = "AIzaSyAwHdcvRab4YrA1rA1CorrqakMvt_UL9KU"; // Canvas will automatically provide this
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
+        const API_URL = '/gemini'; // server-side proxy; the key stays in the server's .env
         const COMMAND_ENDPOINT = '/ai_command';
 
         let chatHistory = [];
@@ -204,12 +203,6 @@
             const prompt = userInput.value.trim();
             if (!prompt) return;
 
-            // --- API KEY CHECK (GUARDRAIL) ---
-            if (!API_KEY) {
-                addMessage("COMMUNICATION ERROR: API Key is missing. Cannot contact the AI Core.", 'ai');
-                return;
-            }
-            // ---------------------------------
 
             // 1. Add user message to UI and history
             addMessage(prompt, 'user');

@@ -3,6 +3,9 @@ import serial
 from serial.tools import list_ports
 import time
 from datetime import datetime
+import os
+import urllib.request
+import urllib.error
 
 # --- Initialize Flask App ---
 app = Flask(__name__)
@@ -524,6 +527,37 @@ def clear_buffer():
     else:
         log_message(f"⚠️ ({get_timestamp()}) Not connected. Cannot clear buffer.", "error")
     return redirect(url_for('index'))
+
+# --- Gemini proxy: the browser calls /gemini, so the API key never leaves the server ---
+# Set GEMINI_API_KEY in the environment (or a .env file); optionally GEMINI_MODEL.
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+
+
+@app.route('/gemini', methods=['POST'])
+def gemini_chat():
+    key = os.environ.get("GEMINI_API_KEY")
+    if not key:
+        return jsonify({"error": {"message": "GEMINI_API_KEY is not set on the server."}}), 500
+    model = os.environ.get("GEMINI_MODEL", "gemini-3.1-flash-lite")
+    upstream = urllib.request.Request(
+        GEMINI_URL.format(model=model),
+        data=request.get_data(),
+        headers={"Content-Type": "application/json", "x-goog-api-key": key},
+    )
+    try:
+        with urllib.request.urlopen(upstream, timeout=60) as resp:
+            return resp.read(), resp.status, {"Content-Type": "application/json"}
+    except urllib.error.HTTPError as e:
+        # Pass Gemini's own error body through; the page already reads error.message.
+        return e.read(), e.code, {"Content-Type": "application/json"}
+    except urllib.error.URLError as e:
+        return jsonify({"error": {"message": f"Could not reach Gemini: {e.reason}"}}), 502
 
 
 if __name__ == '__main__':
