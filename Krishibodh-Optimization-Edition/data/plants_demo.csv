@@ -1,0 +1,16 @@
+# name,x,y,z in stepper steps (same units as the firmware)
+# PLANT_1 and PLANT_2 are the real coordinates from arduino_service.py.
+# P3..P12 are an ILLUSTRATIVE layout for a bigger bed: replace with your measured positions.
+name,x,y,z
+PLANT_1,2000,800,10000
+PLANT_2,3000,1500,10000
+P3,5200,300,10000
+P4,600,2600,10000
+P5,4400,2800,10000
+P6,1200,1400,10000
+P7,5800,1700,10000
+P8,300,500,10000
+P9,3600,400,10000
+P10,2500,2900,10000
+P11,4900,1000,10000
+P12,1800,2200,10000
