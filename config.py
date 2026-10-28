@@ -1,61 +1,29 @@
-"""
-Configuration settings for the Plant Health Analysis System
-"""
+"""Settings, read from the environment (.env). Nothing here calls an API."""
 import os
+
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
-# Gemini API Configuration
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = "gemini-2.0-flash-exp"  # Using the latest experimental model for better image analysis
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 
-# Application Settings
-DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+# The vision tool calls Gemini directly with the image bytes.
+VISION_MODEL = os.getenv("VISION_MODEL", "gemini-3.1-flash-lite")
+# The agents reason with this model, addressed through LiteLLM ("provider/model").
+AGENT_MODEL = os.getenv("AGENT_MODEL", "gemini/gemini-3.1-flash-lite")
 
-# Image Processing Settings
-MAX_IMAGE_SIZE_MB = int(os.getenv("MAX_IMAGE_SIZE_MB", "10"))
-SUPPORTED_FORMATS = os.getenv("SUPPORTED_FORMATS", "jpg,jpeg,png,webp").split(",")
+MAX_IMAGE_MB = float(os.getenv("MAX_IMAGE_MB", "10"))
+SUPPORTED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 
-# CrewAI Settings
-CREW_VERBOSE = os.getenv("CREW_VERBOSE", "False").lower() == "true"
+CREW_VERBOSE = os.getenv("CREW_VERBOSE", "false").lower() == "true"
+# A free key allows 15 requests per minute in total. The crew's own LLM calls are
+# capped here; the vision tool's calls come on top, so keep headroom.
+CREW_MAX_RPM = int(os.getenv("CREW_MAX_RPM", "6"))
+# LiteLLM retries rate-limit (429) and overload (503) errors with backoff.
+LLM_RETRIES = int(os.getenv("LLM_RETRIES", "4"))
 
-# LLM Configuration for CrewAI agents
-import os
-os.environ["OPENAI_API_KEY"] = GEMINI_API_KEY  # LiteLLM uses this for Gemini
-LLM_MODEL = f"gemini/{GEMINI_MODEL}"
 
-# Validate required settings
-if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY environment variable is required. Please set it in your .env file.")
-
-# CrewAI Configuration
-CREW_CONFIG = {
-    "verbose": CREW_VERBOSE,
-    "process": "sequential",  # Agents work in sequence
-    "memory": False,  # Disable memory to avoid ChromaDB issues
-    "cache": False,  # Disable caching
-    "max_rpm": 5,  # Lower rate limiting for API calls
-}
-
-# Agent-specific configurations (Simplified to 2 agents)
-AGENT_CONFIGS = {
-    "image_analyzer": {
-        "role": "Plant Image Analyzer",
-        "goal": "Analyze plant images for visual characteristics, structure, and basic health indicators",
-        "backstory": "Expert botanist and image analyst skilled at examining plant morphology, color patterns, and identifying basic health issues from visual inspection.",
-        "allow_delegation": False,
-        "verbose": CREW_VERBOSE,
-        "llm": LLM_MODEL,
-    },
-    "health_assessor": {
-        "role": "Plant Health Specialist",
-        "goal": "Provide comprehensive plant health assessment and treatment recommendations",
-        "backstory": "Senior plant health consultant with expertise in diagnosing plant problems and providing actionable treatment plans based on visual analysis.",
-        "allow_delegation": False,
-        "verbose": CREW_VERBOSE,
-        "llm": LLM_MODEL,
-    }
-}
+def require_api_key() -> str:
+    if not GEMINI_API_KEY:
+        raise RuntimeError("GEMINI_API_KEY is not set. Add it to .env (see .env.example).")
+    return GEMINI_API_KEY
