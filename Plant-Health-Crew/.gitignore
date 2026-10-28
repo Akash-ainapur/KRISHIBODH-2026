@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+*.log
+plant_health_report_*.txt
+reports/
+.pytest_cache/

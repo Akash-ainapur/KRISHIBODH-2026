@@ -1,0 +1,114 @@
+[
+  {
+    "id": "healthy",
+    "name": "Healthy foliage",
+    "crops": ["any"],
+    "signs": ["uniform green colour", "no spots", "no lesions", "no wilting", "leaves flat and intact"],
+    "keywords": ["healthy", "uniform", "green", "clean", "intact", "no spots", "no damage"],
+    "care": ["Keep the current watering and feeding routine.", "Keep inspecting weekly so problems are caught early."]
+  },
+  {
+    "id": "early_blight",
+    "name": "Early blight (Alternaria)",
+    "crops": ["tomato", "potato"],
+    "signs": ["brown spots with concentric rings like a target", "yellow halo around spots", "starts on older lower leaves", "leaves yellow and drop"],
+    "keywords": ["brown", "spots", "concentric", "rings", "target", "yellow", "halo", "lower", "older", "lesions"],
+    "care": ["Remove and destroy affected lower leaves.", "Water at the soil, not over the leaves, and mulch to stop soil splash.", "Rotate crops; use a labelled fungicide (copper or chlorothalonil) if it spreads."]
+  },
+  {
+    "id": "target_spot",
+    "name": "Target spot (Corynespora)",
+    "crops": ["tomato"],
+    "signs": ["small brown spots that enlarge with faint concentric rings", "light brown centres", "spots on leaves, stems and fruit"],
+    "keywords": ["brown", "spots", "concentric", "rings", "target", "light", "centre", "center", "small", "lesions"],
+    "care": ["Remove infected leaves and improve airflow between plants.", "Avoid long periods of wet leaves.", "Use a labelled fungicide if many leaves are affected."]
+  },
+  {
+    "id": "late_blight",
+    "name": "Late blight (Phytophthora infestans)",
+    "crops": ["tomato", "potato"],
+    "signs": ["large irregular grey-green to dark brown patches", "water-soaked or greasy looking lesions", "white fuzzy growth on the underside in humid weather", "spreads very fast"],
+    "keywords": ["large", "irregular", "dark", "brown", "grey", "gray", "water-soaked", "greasy", "white", "fuzzy", "underside", "patches", "blotches"],
+    "care": ["Remove and destroy infected plants; do not compost them.", "Keep leaves dry and space plants for airflow.", "Protect healthy plants with a labelled fungicide; act quickly, it spreads within days."]
+  },
+  {
+    "id": "septoria_leaf_spot",
+    "name": "Septoria leaf spot",
+    "crops": ["tomato"],
+    "signs": ["many small round spots", "grey or tan centres with dark borders", "tiny black dots in the centre", "starts on lower leaves"],
+    "keywords": ["many", "small", "round", "circular", "spots", "grey", "gray", "tan", "dark", "border", "black", "dots", "lower"],
+    "care": ["Remove affected lower leaves.", "Avoid overhead watering and mulch the soil.", "Rotate crops and use a labelled fungicide if needed."]
+  },
+  {
+    "id": "bacterial_spot",
+    "name": "Bacterial spot (Xanthomonas)",
+    "crops": ["tomato", "pepper"],
+    "signs": ["small dark brown to black water-soaked spots", "spots may have a yellow halo", "spots merge and leaves turn yellow", "scabby spots on fruit"],
+    "keywords": ["small", "dark", "black", "brown", "water-soaked", "spots", "yellow", "halo", "merge", "scabby", "greasy"],
+    "care": ["Remove badly affected leaves; do not work with plants when they are wet.", "Avoid overhead watering.", "Use disease-free seed; copper sprays can slow spread."]
+  },
+  {
+    "id": "leaf_mold",
+    "name": "Leaf mould (Passalora fulva)",
+    "crops": ["tomato"],
+    "signs": ["pale green or yellow patches on the upper leaf surface", "olive-green to brown velvety mould on the underside", "common in humid greenhouses"],
+    "keywords": ["pale", "yellow", "patches", "upper", "olive", "velvety", "mould", "mold", "underside", "humid", "fuzzy"],
+    "care": ["Lower humidity and improve ventilation.", "Remove affected leaves.", "Water early in the day so leaves dry quickly."]
+  },
+  {
+    "id": "powdery_mildew",
+    "name": "Powdery mildew",
+    "crops": ["many"],
+    "signs": ["white or grey powdery coating on leaves", "leaves yellow and curl", "usually starts on upper leaf surfaces"],
+    "keywords": ["white", "powdery", "powder", "coating", "dusty", "grey", "gray", "mildew"],
+    "care": ["Remove affected leaves and improve airflow.", "Avoid excess nitrogen fertiliser.", "Sulphur or potassium bicarbonate sprays can control it."]
+  },
+  {
+    "id": "spider_mites",
+    "name": "Spider mites",
+    "crops": ["many"],
+    "signs": ["fine yellow or white speckling (stippling) on leaves", "fine webbing under leaves", "leaves turn bronze and dry"],
+    "keywords": ["speckling", "stippling", "speckled", "tiny", "dots", "webbing", "webs", "bronze", "bronzing", "dry", "yellow"],
+    "care": ["Spray the leaf undersides with water to knock mites off.", "Use insecticidal soap or neem oil.", "Avoid drought stress, which favours mites."]
+  },
+  {
+    "id": "yellow_leaf_curl_virus",
+    "name": "Tomato yellow leaf curl virus",
+    "crops": ["tomato"],
+    "signs": ["leaves curl upward and cup", "yellow leaf edges", "small crumpled leaves", "stunted plant", "spread by whiteflies"],
+    "keywords": ["curl", "curled", "curling", "upward", "cupping", "yellow", "edges", "margins", "crumpled", "stunted", "small"],
+    "care": ["There is no cure: remove infected plants.", "Control whiteflies (yellow sticky traps, insect netting).", "Use resistant varieties next season."]
+  },
+  {
+    "id": "mosaic_virus",
+    "name": "Mosaic virus",
+    "crops": ["tomato", "pepper", "many"],
+    "signs": ["light and dark green mottled mosaic pattern", "distorted or fern-like leaves", "stunted growth"],
+    "keywords": ["mosaic", "mottled", "mottling", "light", "dark", "green", "pattern", "distorted", "deformed", "fern"],
+    "care": ["There is no cure: remove infected plants.", "Wash hands and tools; the virus spreads by touch.", "Control aphids and use resistant varieties."]
+  },
+  {
+    "id": "nitrogen_deficiency",
+    "name": "Nitrogen deficiency",
+    "crops": ["any"],
+    "signs": ["even yellowing of older lower leaves first", "pale green plant", "slow, stunted growth"],
+    "keywords": ["yellowing", "uniform", "even", "pale", "older", "lower", "chlorosis", "stunted"],
+    "care": ["Apply a balanced or nitrogen-rich fertiliser.", "Add compost to the soil.", "Recheck in 1 to 2 weeks for new green growth."]
+  },
+  {
+    "id": "underwatering",
+    "name": "Water stress (underwatering)",
+    "crops": ["any"],
+    "signs": ["wilting or drooping in dry soil", "crispy brown leaf edges", "leaves dropping"],
+    "keywords": ["wilting", "wilted", "drooping", "crispy", "dry", "brown", "edges", "tips", "scorched"],
+    "care": ["Water deeply, then let the topsoil dry slightly between waterings.", "Mulch to keep moisture in.", "Check soil moisture before watering."]
+  },
+  {
+    "id": "overwatering",
+    "name": "Overwatering / root rot",
+    "crops": ["any"],
+    "signs": ["wilting even though the soil is wet", "yellow lower leaves", "soft dark stem base or roots"],
+    "keywords": ["wilting", "wet", "soggy", "yellow", "soft", "mushy", "dark", "stem", "base", "rot"],
+    "care": ["Water less often and only when the topsoil is dry.", "Improve drainage.", "Check roots: remove soft, dark roots."]
+  }
+]

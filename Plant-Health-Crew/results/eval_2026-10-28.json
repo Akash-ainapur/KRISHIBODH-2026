@@ -1,0 +1,196 @@
+{
+  "summary": {
+    "photos": 15,
+    "completed": 14,
+    "top1_correct": 5,
+    "top2_correct": 8,
+    "mean_seconds": 53.1,
+    "mean_tokens": 5013
+  },
+  "rows": [
+    {
+      "image": "Pepper_bell___Bacterial_spot.jpg",
+      "expected": "bacterial_spot",
+      "predicted": [
+        "bacterial_spot",
+        "early_blight"
+      ],
+      "top1": true,
+      "top2": true,
+      "seconds": 108.2,
+      "tokens": 5271,
+      "requests": 6
+    },
+    {
+      "image": "Pepper_bell___healthy.jpg",
+      "expected": "healthy",
+      "predicted": [
+        "bacterial_spot",
+        "leaf_mold"
+      ],
+      "top1": false,
+      "top2": false,
+      "seconds": 55.9,
+      "tokens": 5040,
+      "requests": 6
+    },
+    {
+      "image": "Potato___Early_blight.jpg",
+      "expected": "early_blight",
+      "predicted": [
+        "early_blight",
+        "target_spot"
+      ],
+      "top1": true,
+      "top2": true,
+      "seconds": 41.4,
+      "tokens": 5223,
+      "requests": 6
+    },
+    {
+      "image": "Potato___healthy.jpg",
+      "expected": "healthy",
+      "predicted": [
+        "healthy"
+      ],
+      "top1": true,
+      "top2": true,
+      "seconds": 46.8,
+      "tokens": 4817,
+      "requests": 6
+    },
+    {
+      "image": "Potato___Late_blight.jpg",
+      "expected": "late_blight",
+      "predicted": [
+        "early_blight",
+        "target_spot"
+      ],
+      "top1": false,
+      "top2": false,
+      "seconds": 46.0,
+      "tokens": 5151,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___Bacterial_spot.jpg",
+      "expected": "bacterial_spot",
+      "predicted": [
+        "early_blight",
+        "bacterial_spot"
+      ],
+      "top1": false,
+      "top2": true,
+      "seconds": 44.6,
+      "tokens": 4878,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___Early_blight.jpg",
+      "expected": "early_blight",
+      "predicted": [
+        "bacterial_spot",
+        "early_blight"
+      ],
+      "top1": false,
+      "top2": true,
+      "seconds": 55.0,
+      "tokens": 5007,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___healthy.jpg",
+      "expected": "healthy",
+      "error": "Invalid response from LLM call - None or empty."
+    },
+    {
+      "image": "Tomato___Late_blight.jpg",
+      "expected": "late_blight",
+      "predicted": [
+        "late_blight",
+        "bacterial_spot"
+      ],
+      "top1": true,
+      "top2": true,
+      "seconds": 63.8,
+      "tokens": 5218,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___Leaf_Mold.jpg",
+      "expected": "leaf_mold",
+      "predicted": [
+        "healthy"
+      ],
+      "top1": false,
+      "top2": false,
+      "seconds": 50.8,
+      "tokens": 4914,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___Septoria_leaf_spot.jpg",
+      "expected": "septoria_leaf_spot",
+      "predicted": [
+        "bacterial_spot",
+        "early_blight"
+      ],
+      "top1": false,
+      "top2": false,
+      "seconds": 67.5,
+      "tokens": 5029,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___Spider_mites_Two-spotted_spider_mite.jpg",
+      "expected": "spider_mites",
+      "predicted": [
+        "yellow_leaf_curl_virus",
+        "powdery_mildew"
+      ],
+      "top1": false,
+      "top2": false,
+      "seconds": 42.2,
+      "tokens": 4982,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___Target_Spot.jpg",
+      "expected": "target_spot",
+      "predicted": [
+        "yellow_leaf_curl_virus"
+      ],
+      "top1": false,
+      "top2": false,
+      "seconds": 53.0,
+      "tokens": 4734,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___Tomato_mosaic_virus.jpg",
+      "expected": "mosaic_virus",
+      "predicted": [
+        "yellow_leaf_curl_virus",
+        "mosaic_virus"
+      ],
+      "top1": false,
+      "top2": true,
+      "seconds": 46.8,
+      "tokens": 4828,
+      "requests": 6
+    },
+    {
+      "image": "Tomato___Tomato_Yellow_Leaf_Curl_Virus.jpg",
+      "expected": "yellow_leaf_curl_virus",
+      "predicted": [
+        "yellow_leaf_curl_virus",
+        "nitrogen_deficiency"
+      ],
+      "top1": true,
+      "top2": true,
+      "seconds": 20.9,
+      "tokens": 5092,
+      "requests": 6
+    }
+  ]
+}
